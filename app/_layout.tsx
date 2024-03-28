@@ -1,20 +1,30 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 
 const StackLayout = () => {
     const { authState } = useAuth();
+    const { onCheckAuth } = useAuth();
     const segments = useSegments();
     const router = useRouter();
 
     useEffect(() => {
-        const inAuthGroup = segments[0] === "(protected)";
+        const checkAuth = async () => {
+            const inAuthGroup = segments[0] === "(protected)";
+            const token = await SecureStore.getItemAsync("token");
 
-        if (!authState?.authenticated && inAuthGroup) {
-            router.replace("/");
-        } else if (authState?.authenticated === true) {
-            router.replace("/(protected)/home");
-        }
+            if (token && authState?.authenticated === false) {
+                onCheckAuth!();
+                console.log("checking auth");
+            }
+            if (!authState?.authenticated && inAuthGroup) {
+                router.replace("/");
+            } else if (authState?.authenticated === true) {
+                router.replace("/(protected)/home");
+            }
+        };
+        checkAuth();
     }, [authState]);
 
     return (

@@ -13,12 +13,13 @@ import { useAuth } from "@/contexts/AuthContext";
 const Page = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { onLogin } = useAuth();
+    const [email, setEmail] = useState("");
+    const { onRegister } = useAuth();
     const navigation = useNavigation();
 
     const onSignInPress = async () => {
         if (!username || !password) return;
-        onLogin!(username, password);
+        onRegister!(email, username, password);
     };
 
     return (
@@ -27,6 +28,13 @@ const Page = () => {
             style={styles.container}
         >
             <Text style={styles.header}>My App</Text>
+            <TextInput
+                autoCapitalize="none"
+                placeholder="email"
+                value={email}
+                onChangeText={setEmail}
+                style={styles.inputField}
+            />
             <TextInput
                 autoCapitalize="none"
                 placeholder="username"
@@ -43,7 +51,7 @@ const Page = () => {
             />
 
             <TouchableOpacity onPress={onSignInPress} style={styles.button}>
-                <Text style={{ color: "#fff" }}>Login</Text>
+                <Text style={{ color: "#fff" }}>Register </Text>
             </TouchableOpacity>
 
             <Text

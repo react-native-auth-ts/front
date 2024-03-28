@@ -1,9 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import apiClient from "@/axios";
 import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
+
 interface AuthProps {
     authState: { authenticated: boolean | null; username: string | null };
     onLogin: (username: string, password: string) => void;
+    onRegister: (email: string, username: string, password: string) => void;
+    onCheckAuth: () => void;
     Logout: () => void;
 }
 
@@ -22,34 +26,52 @@ export const AuthProvider = ({ children }: any) => {
         username: null,
     });
 
-    const login = async (username: string, password: string) => {
+    const login = (username: string, password: string) => {
         if (!username || !password) return;
         apiClient
             .post("/login", { username, password })
             .then(async res => {
-                const token = await res.data.token;
+                const token: string = res.data.token;
                 setAuthState({
                     authenticated: true,
                     username: res.data.username,
                 });
-                SecureStore.setItemAsync("token", token);
+                await SecureStore.setItemAsync("token", token);
             })
             .catch(err => {
                 console.log(err);
             });
     };
 
+    const register = (email: string, username: string, password: string) => {
+        if (!username || !password) return;
+        apiClient
+            .post("/register", { email, username, password })
+            .then(async res => {
+                let token: string = res.data.token;
+                token = token.replace(/\d+\|/, "");
+                console.log(token);
+                setAuthState({
+                    authenticated: true,
+                    username: res.data.username,
+                });
+                await SecureStore.setItemAsync("token", token);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
     const logout = () => {
         apiClient
             .post("/logout")
             .then(res => {
-                const token = res.data.token;
                 setAuthState({
                     authenticated: false,
                     username: null,
                 });
-                SecureStore.deleteItemAsync("token", token);
+                SecureStore.deleteItemAsync("token");
             })
+
             .catch(err => {
                 console.log(err);
             });
@@ -57,8 +79,9 @@ export const AuthProvider = ({ children }: any) => {
 
     const checkAuth = () => {
         apiClient
-            .get("/check-auth")
+            .get("/checkAuth")
             .then(res => {
+                console.log("check-auth");
                 if (res.data.authenticated) {
                     setAuthState({
                         authenticated: true,
@@ -78,6 +101,8 @@ export const AuthProvider = ({ children }: any) => {
     const value = {
         onLogin: login,
         Logout: logout,
+        onRegister: register,
+        onCheckAuth: checkAuth,
         authState,
     };
 

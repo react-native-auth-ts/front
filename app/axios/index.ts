@@ -8,13 +8,21 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     async config => {
-        const token = SecureStore.getItemAsync("token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        try {
+            const token = await SecureStore.getItemAsync("token");
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        } catch (error) {
+            console.error("Error in request interceptor", error);
+            throw error;
         }
-        return config;
     },
-    error => Promise.reject(error)
+    error => {
+        console.error("Error in request", error);
+        return Promise.reject(error);
+    }
 );
 
 export default apiClient;
