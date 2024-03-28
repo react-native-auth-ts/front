@@ -13,7 +13,7 @@ const StackLayout = () => {
         if (!authState?.authenticated && inAuthGroup) {
             router.replace("/");
         } else if (authState?.authenticated === true) {
-            router.replace("/(protected)");
+            router.replace("/(protected)/home");
         }
     }, [authState]);
 
