@@ -15,7 +15,7 @@ const Page = () => {
     const [password, setPassword] = useState("");
     const { onLogin } = useAuth();
 
-    const onSignInPress = async () => {
+    const onLoginPress = async () => {
         if (!username || !password) return;
         onLogin!(username, password);
     };
@@ -41,7 +41,7 @@ const Page = () => {
                 style={styles.inputField}
             />
 
-            <TouchableOpacity onPress={onSignInPress} style={styles.button}>
+            <TouchableOpacity onPress={onLoginPress} style={styles.button}>
                 <Text style={{ color: "#fff" }}>Sign in</Text>
             </TouchableOpacity>
 
