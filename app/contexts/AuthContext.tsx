@@ -48,9 +48,7 @@ export const AuthProvider = ({ children }: any) => {
         apiClient
             .post("/register", { email, username, password })
             .then(async res => {
-                let token: string = res.data.token;
-                token = token.replace(/\d+\|/, "");
-                console.log(token);
+                const token: string = res.data.token;
                 setAuthState({
                     authenticated: true,
                     username: res.data.username,
