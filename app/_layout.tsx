@@ -14,18 +14,18 @@ const StackLayout = () => {
             const inAuthGroup = segments[0] === "(protected)";
             const token = await SecureStore.getItemAsync("token");
 
-            if (token && authState?.authenticated === false) {
+            if (token && !authState?.authenticated) {
                 onCheckAuth!();
-                console.log("checking auth");
             }
+
             if (!authState?.authenticated && inAuthGroup) {
                 router.replace("/");
-            } else if (authState?.authenticated === true) {
+            } else if (authState?.authenticated === true && !inAuthGroup) {
                 router.replace("/(protected)/home");
             }
         };
         checkAuth();
-    }, [authState]);
+    }, [authState, onCheckAuth, segments, router]);
 
     return (
         <Stack screenOptions={{ headerTintColor: "black" }}>

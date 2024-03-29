@@ -79,7 +79,6 @@ export const AuthProvider = ({ children }: any) => {
         apiClient
             .get("/checkAuth")
             .then(res => {
-                console.log("check-auth");
                 if (res.data.authenticated) {
                     setAuthState({
                         authenticated: true,
