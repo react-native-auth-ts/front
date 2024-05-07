@@ -76,6 +76,7 @@ export const AuthProvider = ({ children }: any) => {
     };
 
     const checkAuth = () => {
+        console.log("Checking auth");
         apiClient
             .get("/checkAuth")
             .then(res => {

@@ -5,7 +5,6 @@ export default function Page() {
     return (
         <View style={styles.container}>
             <View style={styles.main}>
-                <Text style={styles.title}>Hello World</Text>
                 <Text style={styles.subtitle}>This is the dashboard index</Text>
                 <Pressable
                     onPress={() => {
@@ -30,10 +29,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         maxWidth: 960,
         marginHorizontal: "auto",
-    },
-    title: {
-        fontSize: 64,
-        fontWeight: "bold",
     },
     subtitle: {
         fontSize: 36,
